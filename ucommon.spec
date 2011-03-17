@@ -19,7 +19,7 @@ Source1: ucommon.pc.cmake
 Patch0:  ucommon-config.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires: doxygen graphviz openssl-devel cmake
-Group: System Environment/Libraries
+Group: Development/C++
 Summary: Runtime library for portable C++ threading and sockets
 
 %description
