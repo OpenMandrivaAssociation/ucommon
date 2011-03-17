@@ -33,7 +33,7 @@ for handling of thread locking and synchronization.
 
 %package bin
 Requires: %{name} = %{version}-%{release}
-Group: Applications/System
+Group: Development/Other 
 Summary: ucommon system and support applications
 
 %package devel
@@ -41,11 +41,11 @@ Requires: %{name} = %{version}-%{release}
 Requires: %{name}-bin = %{version}-%{release}
 Requires: openssl-devel
 Requires: pkgconfig
-Group: Development/Libraries
+Group: Development/C++
 Summary: Headers for building uCommon applications
 
 %package doc
-Group: Documentation
+Group: Books/Computer books
 Summary: Generated class documentation for uCommon
 
 %description bin
