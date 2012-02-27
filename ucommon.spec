@@ -10,13 +10,12 @@
 
 Name: ucommon
 Summary: Portable C++ framework for threads and sockets
-Version: 5.0.4
-Release: %mkrel 1
+Version: 5.2.1
+Release: 1
 License: LGPLv3+
 URL: http://www.gnu.org/software/commoncpp
-Source0: ucommon-%{version}.tar.bz2
+Source0: ucommon-%{version}.tar.gz
 Patch0:  sockaddr_missing.patch
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires: doxygen graphviz openssl-devel cmake
 Group: Development/C++
 Summary: Runtime library for portable C++ threading and sockets
@@ -62,7 +61,7 @@ html browsable.
 
 %prep
 %setup -q -n %{name}-%{version}
-%patch0 -p0 -b .sockaddr
+#%patch0 -p0 -b .sockaddr
 
 %build
 
@@ -71,7 +70,6 @@ html browsable.
 %make doc
 
 %install
-%{__rm} -rf %{buildroot}
 cd build
 %{__make} DESTDIR=%{buildroot} INSTALL="install -p" install
 %{__chmod} 0755 %{buildroot}%{_bindir}/ucommon-config
@@ -81,33 +79,29 @@ install -m644 ../utils/*.1 -D %{buildroot}/%{_mandir}/man1
 install -m644 ../*.1 -D %{buildroot}/%{_mandir}/man1
 cp -r doc ..
 
-%clean
-%{__rm} -rf %{buildroot}
-
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS README COPYING COPYING.LESSER COPYRIGHT NEWS SUPPORT ChangeLog
 %{_libdir}/libucommon.so.*
 %{_libdir}/libusecure.so.*
 %{_libdir}/libcommoncpp.so.*
 
 %files bin
-%defattr(-,root,root,-)
 %{_bindir}/args
 %{_bindir}/car
-%{_bindir}/scrub
+%{_bindir}/scrub*
 %{_bindir}/mdsum
 %{_bindir}/sockaddr
 %{_bindir}/zerofill
+%{_bindir}/pdetach
 %{_mandir}/man1/args.*
 %{_mandir}/man1/car.*
-%{_mandir}/man1/scrub.*
+%{_mandir}/man1/pdetach.*
+%{_mandir}/man1/scrub*.*
 %{_mandir}/man1/mdsum.*
 %{_mandir}/man1/sockaddr.*
 %{_mandir}/man1/zerofill.*
 
 %files devel
-%defattr(-,root,root,-)
 %{_libdir}/*.so
 %{_includedir}/ucommon/
 %{_includedir}/commoncpp/
@@ -118,10 +112,4 @@ cp -r doc ..
 %{_mandir}/man1/commoncpp-config.*
 
 %files doc
-%defattr(-,root,root,-)
 %doc doc/html
-
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
-
