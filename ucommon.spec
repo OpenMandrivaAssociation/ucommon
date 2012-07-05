@@ -10,12 +10,11 @@
 
 Name: ucommon
 Summary: Portable C++ framework for threads and sockets
-Version: 5.2.1
+Version: 5.2.2
 Release: 1
 License: LGPLv3+
 URL: http://www.gnu.org/software/commoncpp
 Source0: ucommon-%{version}.tar.gz
-Patch0:  sockaddr_missing.patch
 BuildRequires: doxygen graphviz openssl-devel cmake
 Group: Development/C++
 Summary: Runtime library for portable C++ threading and sockets
@@ -27,7 +26,7 @@ uClibc along with POSIX threading support. For this reason, uCommon disables
 language features that consume memory or introduce runtime overhead. uCommon
 introduces some design patterns from Objective-C, such as reference counted
 objects, memory pools, and smart pointers.  uCommon introduces some new
-concepts for handling of thread locking and synchronization
+concepts for handling of thread locking and synchronization.
 
 %package bin
 Requires: %{name} = %{version}-%{release}
@@ -61,7 +60,6 @@ html browsable.
 
 %prep
 %setup -q -n %{name}-%{version}
-#%patch0 -p0 -b .sockaddr
 
 %build
 
@@ -80,7 +78,7 @@ install -m644 ../*.1 -D %{buildroot}/%{_mandir}/man1
 cp -r doc ..
 
 %files
-%doc AUTHORS README COPYING COPYING.LESSER COPYRIGHT NEWS SUPPORT ChangeLog
+%doc AUTHORS README COPYRIGHT NEWS SUPPORT ChangeLog
 %{_libdir}/libucommon.so.*
 %{_libdir}/libusecure.so.*
 %{_libdir}/libcommoncpp.so.*
