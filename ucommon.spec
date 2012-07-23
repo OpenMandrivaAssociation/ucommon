@@ -14,7 +14,7 @@
 Name: ucommon
 Summary: Portable C++ framework for threads and sockets
 Version: 5.2.2
-Release: 1
+Release: 2
 License: LGPLv3+
 URL: http://www.gnu.org/software/commoncpp
 Source0: ucommon-%{version}.tar.gz
@@ -34,6 +34,7 @@ concepts for handling of thread locking and synchronization.
 %package -n %{libname}
 Group: System/Libraries
 Summary: ucommon libraries
+Obsoletes: %{name} < 5.2.2
 
 %package bin
 Group: Development/Other 
