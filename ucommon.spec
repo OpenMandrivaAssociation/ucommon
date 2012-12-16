@@ -10,17 +10,24 @@
 
 %define	major	5
 %define	libname	%mklibname ucommon %{major}
+%define	libusecure	%mklibname usecure %{major}
+%define	libcommoncpp	%mklibname commoncpp %{major}
+%define	devname	%mklibname ucommon -d
 
-Name: ucommon
-Summary: Portable C++ framework for threads and sockets
-Version: 5.2.2
-Release: 1
-License: LGPLv3+
-URL: http://www.gnu.org/software/commoncpp
-Source0: ucommon-%{version}.tar.gz
-BuildRequires: doxygen graphviz openssl-devel cmake
-Group: Development/C++
-Summary: Runtime library for portable C++ threading and sockets
+Summary:	Portable C++ framework for threads and sockets
+Name:		ucommon
+Version:	6.0.3
+Release:	1
+License:	LGPLv3+
+Group:		Development/C++
+URL:		http://www.gnu.org/software/commoncpp
+Source0:	http://www.gnutelephony.org/dist/tarballs/%{name}-%{version}.tar.gz
+Source1:	http://www.gnutelephony.org/dist/tarballs/%{name}-%{version}.tar.gz.sig
+
+BuildRequires:	cmake
+BuildRequires:	doxygen
+BuildRequires:	graphviz
+BuildRequires:	pkgconfig(openssl)
 
 %description
 GNU uCommon C++ is a lightweight library to facilitate using C++ design
@@ -31,71 +38,75 @@ introduces some design patterns from Objective-C, such as reference counted
 objects, memory pools, and smart pointers.  uCommon introduces some new
 concepts for handling of thread locking and synchronization.
 
-%package -n %{libname}
-Group: System/Libraries
-Summary: ucommon libraries
-
 %package bin
-Group: Development/Other 
-Summary: ucommon system and support applications
-
-%package devel
-Requires: %{libname} = %{version}
-Requires: %{name}-bin = %{version}
-Requires: openssl-devel
-Requires: pkgconfig
-Group: Development/C++
-Summary: Headers for building uCommon applications
-
-%package doc
-Group: Books/Computer books
-Summary: Generated class documentation for uCommon
-
-%description -n %{libname}
-GNU uCommon C++ is a lightweight library to facilitate using C++ design
-patterns even for very deeply embedded applications, such as for systems using
-uClibc along with POSIX threading support. For this reason, uCommon disables
-language features that consume memory or introduce runtime overhead. uCommon
-introduces some design patterns from Objective-C, such as reference counted
-objects, memory pools, and smart pointers.  uCommon introduces some new
-concepts for handling of thread locking and synchronization.
+Summary:	ucommon system and support applications
+Group:		Development/Other 
 
 %description bin
 This is a collection of command line tools that use various aspects of the
 ucommon library.  Some may be needed to prepare files or for development of
 applications.
 
-%description devel
+%package -n %{libname}
+Summary:	ucommon library
+Group:		System/Libraries
+
+%description -n %{libname}
+Runtime library for ucommon.
+
+%package -n %{libusecure}
+Summary:	usecure library
+Group:		System/Libraries
+COnflicts:	%{libname} < 6.0.3-1
+
+%description -n %{libname}
+Runtime library for usecure.
+
+%package -n %{libcommoncpp}
+Summary:	commoncpp library
+Group:		System/Libraries
+COnflicts:	%{libname} < 6.0.3-1
+
+%description -n %{libcommoncpp}
+Runtime library for commoncpp.
+
+%package -n %{devname}
+Summary:	Headers for building uCommon applications
+Group:		Development/C++
+Requires:	%{libname} = %{version}
+Requires:	%{libusecure} = %{version}
+Requires:	%{libcommoncpp} = %{version}
+%rename	%{name}-devel
+
+%description -n %{devname}
 This package provides header and support files needed for building
 applications that use the uCommon library and frameworks
+
+%package doc
+Group: Books/Computer books
+Summary: Generated class documentation for uCommon
 
 %description doc
 Generated class documentation for GNU uCommon library from header files, 
 html browsable.
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q
 
 %build
-
 %cmake
-%{__make} 
+%make 
 %make doc
 
 %install
 cd build
-%{__make} DESTDIR=%{buildroot} INSTALL="install -p" install
-%{__chmod} 0755 %{buildroot}%{_bindir}/ucommon-config
-%{__chmod} 0755 %{buildroot}%{_bindir}/commoncpp-config
+%make DESTDIR=%{buildroot} INSTALL="install -p" install
+chmod 0755 %{buildroot}%{_bindir}/ucommon-config
+chmod 0755 %{buildroot}%{_bindir}/commoncpp-config
 mkdir -p %{buildroot}/%{_mandir}/man1
 install -m644 ../utils/*.1 -D %{buildroot}/%{_mandir}/man1
 install -m644 ../*.1 -D %{buildroot}/%{_mandir}/man1
 cp -r doc ..
-
-%files -n %{libname}
-%{_libdir}/libucommon.so.*
-%{_libdir}/libusecure.so.*
-%{_libdir}/libcommoncpp.so.*
 
 %files bin
 %doc AUTHORS README COPYRIGHT NEWS SUPPORT ChangeLog
@@ -114,8 +125,16 @@ cp -r doc ..
 %{_mandir}/man1/sockaddr.*
 %{_mandir}/man1/zerofill.*
 
-%files devel
-%doc AUTHORS README COPYRIGHT NEWS SUPPORT ChangeLog
+%files -n %{libname}
+%{_libdir}/libucommon.so.%{major}*
+
+%files -n %{libusecure}
+%{_libdir}/libusecure.so.%{major}*
+
+%files -n %{libcommoncpp}
+%{_libdir}/libcommoncpp.so.%{major}*
+
+%files -n %{devname}
 %{_libdir}/*.so
 %{_includedir}/ucommon/
 %{_includedir}/commoncpp/
@@ -128,3 +147,4 @@ cp -r doc ..
 %files doc
 %doc AUTHORS README COPYRIGHT NEWS SUPPORT ChangeLog
 %doc doc/html
+
