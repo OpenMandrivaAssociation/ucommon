@@ -8,7 +8,7 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
-%define	major	5
+%define	major	6
 %define	libname	%mklibname ucommon %{major}
 %define	libusecure	%mklibname usecure %{major}
 %define	libcommoncpp	%mklibname commoncpp %{major}
@@ -57,7 +57,6 @@ Runtime library for ucommon.
 %package -n %{libusecure}
 Summary:	usecure library
 Group:		System/Libraries
-COnflicts:	%{libname} < 6.0.3-1
 
 %description -n %{libname}
 Runtime library for usecure.
@@ -65,7 +64,6 @@ Runtime library for usecure.
 %package -n %{libcommoncpp}
 Summary:	commoncpp library
 Group:		System/Libraries
-COnflicts:	%{libname} < 6.0.3-1
 
 %description -n %{libcommoncpp}
 Runtime library for commoncpp.
