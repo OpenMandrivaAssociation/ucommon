@@ -1,2 +1,3 @@
 sources:
-  "ucommon-5.2.2.tar.gz": 3caf4205d08c45ae6d43bce8af6717d18a5d351f
+  ucommon-6.0.3.tar.gz: e3263fe7bb8a37dc00a227218c62a5040ccaf465
+  ucommon-6.0.3.tar.gz.sig: afd5f525236bac691151d47ea148beb3efcdb5ac
