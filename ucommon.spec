@@ -17,7 +17,7 @@
 Summary:	Portable C++ framework for threads and sockets
 Name:		ucommon
 Version:	6.0.3
-Release:	1
+Release:	2
 License:	LGPLv3+
 Group:		Development/C++
 URL:		http://www.gnu.org/software/commoncpp
