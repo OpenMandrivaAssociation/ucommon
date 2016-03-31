@@ -8,7 +8,7 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
-%define	major	6
+%define	major	8
 %define	libname	%mklibname ucommon %{major}
 %define	libusecure	%mklibname usecure %{major}
 %define	libcommoncpp	%mklibname commoncpp %{major}
@@ -16,13 +16,13 @@
 
 Summary:	Portable C++ framework for threads and sockets
 Name:		ucommon
-Version:	6.0.3
-Release:	2
+Version:	7.0.0
+Release:	1
 License:	LGPLv3+
 Group:		Development/C++
 URL:		http://www.gnu.org/software/commoncpp
-Source0:	http://www.gnutelephony.org/dist/tarballs/%{name}-%{version}.tar.gz
-Source1:	http://www.gnutelephony.org/dist/tarballs/%{name}-%{version}.tar.gz.sig
+Source0:	http://ftp.gnu.org/gnu/commoncpp/%{name}-%{version}.tar.gz
+Source1:	http://ftp.gnu.org/gnu/commoncpp/%{name}-%{version}.tar.gz.sig
 
 BuildRequires:	cmake
 BuildRequires:	doxygen
@@ -110,17 +110,21 @@ cp -r doc ..
 %doc AUTHORS README COPYRIGHT NEWS SUPPORT ChangeLog
 %{_bindir}/args
 %{_bindir}/car
+%{_bindir}/keywait
 %{_bindir}/scrub*
 %{_bindir}/mdsum
-%{_bindir}/sockaddr
-%{_bindir}/zerofill
 %{_bindir}/pdetach
+%{_bindir}/sockaddr
+%{_bindir}/urlout
+%{_bindir}/zerofill
 %{_mandir}/man1/args.*
 %{_mandir}/man1/car.*
+%{_mandir}/man1/keywait.*
 %{_mandir}/man1/pdetach.*
 %{_mandir}/man1/scrub*.*
 %{_mandir}/man1/mdsum.*
 %{_mandir}/man1/sockaddr.*
+%{_mandir}/man1/urlout.*
 %{_mandir}/man1/zerofill.*
 
 %files -n %{libname}
@@ -141,6 +145,7 @@ cp -r doc ..
 %{_bindir}/commoncpp-config
 %{_mandir}/man1/ucommon-config.*
 %{_mandir}/man1/commoncpp-config.*
+%{_datadir}/ucommon/cmake
 
 %files doc
 %doc AUTHORS README COPYRIGHT NEWS SUPPORT ChangeLog
