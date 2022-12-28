@@ -158,7 +158,9 @@ html browsable.
 %autosetup -p1
 
 %build
-export CXXFLAGS="-std=c++14 $RPM_OPT_FLAGS"
+export CXXFLAGS="%{optflags} -std=c++14"
+export LDFLAGS="%{ldflags} -latomic"
+
 %cmake \
 	-G Ninja
 %ninja_build
