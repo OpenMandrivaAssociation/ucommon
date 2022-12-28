@@ -9,25 +9,26 @@
 # PARTICULAR PURPOSE.
 
 %define	major	8
-%define	libname	%mklibname ucommon %{major}
-%define	libusecure	%mklibname usecure %{major}
-%define	libcommoncpp	%mklibname commoncpp %{major}
-%define	devname	%mklibname ucommon -d
+%define	libname			%mklibname ucommon
+%define	libusecure		%mklibname usecure
+%define	libcommoncpp	%mklibname commoncpp
+%define	devname			%mklibname ucommon -d
 
 Summary:	Portable C++ framework for threads and sockets
 Name:		ucommon
 Version:	7.0.0
-Release:	1
+Release:	2
 License:	LGPLv3+
 Group:		Development/C++
-URL:		http://www.gnu.org/software/commoncpp
-Source0:	http://ftp.gnu.org/gnu/commoncpp/%{name}-%{version}.tar.gz
-Source1:	http://ftp.gnu.org/gnu/commoncpp/%{name}-%{version}.tar.gz.sig
+URL:		https://www.gnu.org/software/commoncpp
+Source0:	https://ftp.gnu.org/gnu/commoncpp/%{name}-%{version}.tar.gz
+Source1:	https://ftp.gnu.org/gnu/commoncpp/%{name}-%{version}.tar.gz.sig
 
 BuildRequires:	cmake
 BuildRequires:	doxygen
 BuildRequires:	graphviz
-BuildRequires:	pkgconfig(openssl)
+#BuildRequires:	pkgconfig(openssl)
+BuildRequires:	pkgconfig(gnutls)
 
 %description
 GNU uCommon C++ is a lightweight library to facilitate using C++ design
@@ -38,6 +39,8 @@ introduces some design patterns from Objective-C, such as reference counted
 objects, memory pools, and smart pointers.  uCommon introduces some new
 concepts for handling of thread locking and synchronization.
 
+#--------------------------------------------------------------------
+
 %package bin
 Summary:	ucommon system and support applications
 Group:		Development/Other 
@@ -46,65 +49,6 @@ Group:		Development/Other
 This is a collection of command line tools that use various aspects of the
 ucommon library.  Some may be needed to prepare files or for development of
 applications.
-
-%package -n %{libname}
-Summary:	ucommon library
-Group:		System/Libraries
-
-%description -n %{libname}
-Runtime library for ucommon.
-
-%package -n %{libusecure}
-Summary:	usecure library
-Group:		System/Libraries
-
-%description -n %{libname}
-Runtime library for usecure.
-
-%package -n %{libcommoncpp}
-Summary:	commoncpp library
-Group:		System/Libraries
-
-%description -n %{libcommoncpp}
-Runtime library for commoncpp.
-
-%package -n %{devname}
-Summary:	Headers for building uCommon applications
-Group:		Development/C++
-Requires:	%{libname} = %{version}
-Requires:	%{libusecure} = %{version}
-Requires:	%{libcommoncpp} = %{version}
-%rename	%{name}-devel
-
-%description -n %{devname}
-This package provides header and support files needed for building
-applications that use the uCommon library and frameworks
-
-%package doc
-Group: Books/Computer books
-Summary: Generated class documentation for uCommon
-
-%description doc
-Generated class documentation for GNU uCommon library from header files, 
-html browsable.
-
-%prep
-%setup -q
-
-%build
-%cmake
-%make 
-%make doc
-
-%install
-cd build
-%make DESTDIR=%{buildroot} INSTALL="install -p" install
-chmod 0755 %{buildroot}%{_bindir}/ucommon-config
-chmod 0755 %{buildroot}%{_bindir}/commoncpp-config
-mkdir -p %{buildroot}/%{_mandir}/man1
-install -m644 ../utils/*.1 -D %{buildroot}/%{_mandir}/man1
-install -m644 ../*.1 -D %{buildroot}/%{_mandir}/man1
-cp -r doc ..
 
 %files bin
 %doc AUTHORS README COPYRIGHT NEWS SUPPORT ChangeLog
@@ -127,14 +71,55 @@ cp -r doc ..
 %{_mandir}/man1/urlout.*
 %{_mandir}/man1/zerofill.*
 
+#--------------------------------------------------------------------
+
+%package -n %{libname}
+Summary:	ucommon library
+Group:		System/Libraries
+
+%description -n %{libname}
+Runtime library for ucommon.
+
 %files -n %{libname}
 %{_libdir}/libucommon.so.%{major}*
+
+#--------------------------------------------------------------------
+
+%package -n %{libusecure}
+Summary:	usecure library
+Group:		System/Libraries
+
+%description -n %{libusecure}
+Runtime library for usecure.
 
 %files -n %{libusecure}
 %{_libdir}/libusecure.so.%{major}*
 
+#--------------------------------------------------------------------
+
+%package -n %{libcommoncpp}
+Summary:	commoncpp library
+Group:		System/Libraries
+
+%description -n %{libcommoncpp}
+Runtime library for commoncpp.
+
 %files -n %{libcommoncpp}
 %{_libdir}/libcommoncpp.so.%{major}*
+
+#--------------------------------------------------------------------
+
+%package -n %{devname}
+Summary:	Headers for building uCommon applications
+Group:		Development/C++
+Requires:	%{libname} = %{version}
+Requires:	%{libusecure} = %{version}
+Requires:	%{libcommoncpp} = %{version}
+%rename	%{name}-devel
+
+%description -n %{devname}
+This package provides header and support files needed for building
+applications that use the uCommon library and frameworks
 
 %files -n %{devname}
 %{_libdir}/*.so
@@ -147,7 +132,41 @@ cp -r doc ..
 %{_mandir}/man1/commoncpp-config.*
 %{_datadir}/ucommon/cmake
 
+#--------------------------------------------------------------------
+
+%package doc
+Group: Books/Computer books
+Summary: Generated class documentation for uCommon
+
+%description doc
+Generated class documentation for GNU uCommon library from header files, 
+html browsable.
+
 %files doc
 %doc AUTHORS README COPYRIGHT NEWS SUPPORT ChangeLog
 %doc doc/html
+
+#--------------------------------------------------------------------
+
+%prep
+%autosetup -p1
+
+%build
+export CXXFLAGS="-std=c++14 $RPM_OPT_FLAGS"
+%cmake \
+	-G Ninja
+%ninja_build
+%ninja_build --target doc
+#%%make doc
+
+%install
+%ninja_install
+#cd build
+#%%make DESTDIR=%{buildroot} INSTALL="install -p" install
+#chmod 0755 %{buildroot}%{_bindir}/ucommon-config
+#chmod 0755 %{buildroot}%{_bindir}/commoncpp-config
+#mkdir -p %{buildroot}/%{_mandir}/man1
+#install -m644 ../utils/*.1 -D %{buildroot}/%{_mandir}/man1
+#install -m644 ../*.1 -D %{buildroot}/%{_mandir}/man1
+#cp -r doc ..
 
