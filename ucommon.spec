@@ -8,6 +8,8 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
+%bcond_with doc
+
 %define	major	8
 %define	libname			%mklibname ucommon
 %define	libusecure		%mklibname usecure
@@ -52,7 +54,8 @@ ucommon library.  Some may be needed to prepare files or for development of
 applications.
 
 %files bin
-%doc AUTHORS README COPYRIGHT NEWS SUPPORT ChangeLog
+%license COPYRIGHT
+%doc AUTHORS README NEWS SUPPORT ChangeLog
 %{_bindir}/args
 %{_bindir}/car
 %{_bindir}/keywait
@@ -135,6 +138,7 @@ applications that use the uCommon library and frameworks
 
 #--------------------------------------------------------------------
 
+%if %{with doc}
 %package doc
 Group: Books/Computer books
 Summary: Generated class documentation for uCommon
@@ -146,6 +150,7 @@ html browsable.
 %files doc
 %doc AUTHORS README COPYRIGHT NEWS SUPPORT ChangeLog
 %doc doc/html
+%endif
 
 #--------------------------------------------------------------------
 
@@ -157,8 +162,10 @@ export CXXFLAGS="-std=c++14 $RPM_OPT_FLAGS"
 %cmake \
 	-G Ninja
 %ninja_build
+
+%if %{with doc}
 %ninja_build --target doc
-#%%make doc
+%endif
 
 %install
 %ninja_install
