@@ -25,6 +25,7 @@ Source0:	https://ftp.gnu.org/gnu/commoncpp/%{name}-%{version}.tar.gz
 Source1:	https://ftp.gnu.org/gnu/commoncpp/%{name}-%{version}.tar.gz.sig
 
 BuildRequires:	cmake
+BuildRequires:	ninja
 BuildRequires:	doxygen
 BuildRequires:	graphviz
 #BuildRequires:	pkgconfig(openssl)
